@@ -1,0 +1,320 @@
+@height-title: 28px;
+@height-tabs: 32px;
+@height-controls: 67px;
+
+//@tabs-bg-color: #fff;
+
+.toolbar {
+    position: relative;
+
+    &:not(.folded) {
+        height: @height-tabs + @height-controls;
+    }
+
+    &.folded {
+        height: @height-tabs;
+        transition: height .2s;
+        overflow: hidden;
+
+        &.expanded {
+            height: @height-tabs + @height-controls;
+            overflow: visible;
+        }
+
+        &:not(.expanded):not(.cover){
+            .ribtab.active {
+                > a {
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+
+    .box-tabs {
+        height: @height-tabs;
+        font-size: 12px;
+
+        display: flex;
+        align-items: stretch;
+
+        .extra {
+            background-color: @tabs-bg-color;
+        }
+
+    //&::after {
+    //  content: '';
+    //  position: absolute;
+    //  width: 100%;
+    //  border-top: 1px solid @gray-dark;
+    //  top: @height-tabs - 1;
+    //  left: 0;
+    //  z-index: 1;
+    //}
+    }
+
+    .tabs {
+        //flex-grow: 1;
+        background-color: @tabs-bg-color;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+
+        > ul {
+            padding: 4px 0 0;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            list-style: none;
+            font-size: 0;
+        }
+
+        li {
+            display: inline-flex;
+            align-items: center;
+            height: 100%;
+
+            &:hover {
+                background-color: rgba(255,255,255,0.2);
+            }
+
+            &.active {
+                background-color: @gray-light;
+            }
+
+
+            > a {
+                display: inline-block;
+                padding: 0 12px;
+                text-decoration: none;
+                cursor: default;
+                font-size: 12px;
+                text-align: center;
+                color: #fff;
+            }
+
+            &.active {
+                > a {
+                    color: #444;
+                }
+            }
+        }
+
+        &:not(.short) {
+            .scroll {
+                display: none;
+            }
+        }
+
+        .scroll {
+            line-height: @height-tabs;
+            min-width: 20px;
+            text-align: center;
+            z-index: 1;
+            cursor: pointer;
+            color: #fff;
+
+            &:hover {
+                text-decoration: none;
+            }
+
+            &.left{
+                box-shadow: 5px 0 20px 5px @tabs-bg-color
+            }
+            &.right{
+                box-shadow: -5px 0 20px 5px @tabs-bg-color
+            }
+        }
+    }
+
+    .box-controls {
+        //height: @height-controls;         // button has strange offset in IE when odd height
+        padding: 10px 0;
+        display: flex;
+
+        //background-color: #F2CBBF;
+
+        .panel {
+            display: table;
+            height: 100%;
+        }
+        //width: 100%;
+    }
+
+    .box-panels {
+        flex-grow: 1;
+
+        .panel:not(.active) {
+            display: none;
+        }
+    }
+
+    background-color: @gray-light;
+    .box-inner-shadow(0 -1px 0 @gray-dark);
+
+    .group {
+        position: relative;
+        display: table-cell;
+        vertical-align: middle;
+        white-space: nowrap;
+        padding-left: 12px;
+        font-size: 0;
+
+        &:last-child {
+            padding-right: 12px;
+        }
+    }
+
+    .elset {
+        height: 20px;
+        font-size: 0;
+
+        &:not(:first-child) {
+            margin-top: 6px;
+        }
+    }
+
+    .separator {
+        margin-left: 12px;
+
+        &.close {
+            margin-left: 5px;
+        }
+
+        &.long {
+            height: 46px;
+        }
+
+        &.short {
+            height: 20px;
+        }
+    }
+
+    .btn-slot {
+        display: inline-block;
+        width: 20px;
+        height: auto;
+
+        &.split {
+            width: 31px;
+        }
+
+        &.text {
+            width: auto;
+        }
+
+        &.border {
+            border: 1px solid @gray;
+            .border-radius(1px);
+            width: 22px;
+            height: 22px;
+        }
+
+        .checkbox-indeterminate {
+            margin-top: 3px;
+        }
+    }
+
+    .top-title > & {
+        &:not(.folded) {
+            height: 28 + @height-controls;
+        }
+
+        &.folded {
+            height: 28px;
+
+            &.expanded {
+                height: 28 + @height-controls;
+            }
+        }
+
+        .tabs > ul {
+            padding-top: 0;
+        }
+
+        .box-tabs {
+            height: 28px;
+        }
+    }
+
+}
+
+.toolbar-fullview-panel {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 102;
+}
+
+.toolbar {
+    &.cover {
+        ul {
+            z-index: 102;
+        }
+    }
+}
+
+.btn-toolbar {
+    &:active {
+        svg.icon {
+            fill: #fff;
+        }
+    }
+
+    svg.icon {
+        background-image: none;
+
+        fill: @gray-deep;
+    }
+}
+
+.button-otherstates-icon2(btn-toolbar, @toolbar-icon-size);
+
+@toolbar-big-icon-size: 26px;
+.button-normal-icon(btn-inserttable,      0, @toolbar-big-icon-size);
+.button-normal-icon(btn-insertimage,      1, @toolbar-big-icon-size);
+.button-normal-icon(btn-insertchart,      2, @toolbar-big-icon-size);
+.button-normal-icon(btn-text,             3, @toolbar-big-icon-size);
+.button-normal-icon(btn-insertshape,      4, @toolbar-big-icon-size);
+.button-normal-icon(btn-ic-doclang,       5, @toolbar-big-icon-size);
+.button-normal-icon(btn-textart,          6, @toolbar-big-icon-size);
+.button-normal-icon(btn-insertequation,   7, @toolbar-big-icon-size);
+.button-normal-icon(btn-notes,            8, @toolbar-big-icon-size);
+.button-normal-icon(btn-inserthyperlink,  9, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-menu-comments', 10, @toolbar-big-icon-size);
+.button-normal-icon(btn-addslide,         11, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-docspell', 12, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-review', 13, @toolbar-big-icon-size);
+.button-normal-icon(review-save,          14, @toolbar-big-icon-size);
+.button-normal-icon(review-deny,          15, @toolbar-big-icon-size);
+.button-normal-icon(review-next,          16, @toolbar-big-icon-size);
+.button-normal-icon(review-prev,          17, @toolbar-big-icon-size);
+.button-normal-icon(btn-dropcap,          18, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-pagebreak', 19, @toolbar-big-icon-size);
+.button-normal-icon(btn-editheader,       20, @toolbar-big-icon-size);
+.button-normal-icon(btn-pageorient,       21, @toolbar-big-icon-size);
+.button-normal-icon(btn-pagemargins,      22, @toolbar-big-icon-size);
+.button-normal-icon(btn-pagesize,         23, @toolbar-big-icon-size);
+.button-normal-icon(btn-columns,          24, @toolbar-big-icon-size);
+.button-normal-icon(btn-img-align,        25, @toolbar-big-icon-size);
+.button-normal-icon(btn-img-group,        26, @toolbar-big-icon-size);
+.button-normal-icon(btn-img-bkwd,         27, @toolbar-big-icon-size);
+.button-normal-icon(btn-img-frwd,         28, @toolbar-big-icon-size);
+.button-normal-icon(btn-img-wrap,         29, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-reviewview', 30, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-sharing', 31, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-coedit', 32, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-chat', 33, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-history', 34, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-protect', 35, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-ic-signature', 36, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-add-pivot', 37, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-update-pivot', 38, @toolbar-big-icon-size);
+.button-normal-icon(btn-contents-update, 38, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-pivot-layout', 39, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-blank-rows', 43, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-subtotals', 46, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-grand-totals', 52, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-contents', 53, @toolbar-big-icon-size);
+.button-normal-icon(btn-controls,         54, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-select-pivot', 55, @toolbar-big-icon-size);
+.button-normal-icon(~'x-huge .btn-bookmarks', 56, @toolbar-big-icon-size);

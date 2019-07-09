@@ -1,0 +1,228 @@
+<!--*
+ *
+ * (c) Copyright Ascensio System Limited 2010-2017
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+*-->
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>ONLYOFFICE</title>
+    <link rel="icon"
+        href="images/presentation.ico"
+        type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/editor.css" />
+</head>
+<body>
+    <div class="form">
+        <div id="iframeEditor">
+        </div>
+    </div>
+    <script type="text/javascript" src="web-apps/apps/api/documents/api.js"></script>
+    <script type="text/javascript" language="javascript">
+
+        window['IS_NATIVE_EDITOR'] = true;
+
+        var mode = "edit";
+        var canEdit = true;
+        var type = 'desktop';
+        var lang = 'en';
+        var argss = {
+            apiUrl: "web-apps/apps/api/documents/api.js",
+            file: {
+                name: "new (7).pptx",
+                ext: 'pptx',
+                uri: "http://192.168.95.128:3000/files/__ffff_192.168.95.1/new%20(10).pptx",
+                //version: countVersion,
+                created: new Date().toDateString()
+            },
+            editor: {
+                type: type,
+                documentType: 'presentation',
+                key: "0",
+                token: "",
+                callbackUrl: "http://192.168.95.128:3000/track?filename=new%20(7).pptx&useraddress=__ffff_192.168.95.1",
+                isEdit: canEdit && (mode == "edit" || mode == "filter"),
+                review: mode == "edit" || mode == "review",
+                comment: mode != "view" && mode != "embedded",
+                modifyFilter: mode != "filter",
+                mode: canEdit && mode != "view" ? "edit" : "view",
+                canBackToFolder: type != "embedded",
+                backUrl: "http://127.0.0.1:8081/back",
+                //curUserHostAddress: docManager.curUserHostAddress(),
+                lang: lang,
+                userid: "uid-1",
+                name: "Jonn Smith",
+                fileChoiceUrl: "http://127.0.0.1:8081/fileChoice",
+                plugins: JSON.stringify({
+                    "pluginsData": []
+                })
+            },
+            history: {},
+            historyData: {} 
+        };
+
+        var docEditor;
+
+        var innerAlert = function (message) {
+            if (console && console.log)
+                console.log(message);
+        };
+
+        var onReady = function () {
+            innerAlert("Document editor ready");
+        };
+
+        var onDocumentStateChange = function (event) {
+            var title = document.title.replace(/\*$/g, "");
+            document.title = title + (event.data ? "*" : "");
+        };
+
+        var onRequestEditRights = function () {
+            location.href = location.href.replace(RegExp("mode=view\&?", "i"), "");
+        };
+
+        var onRequestHistory = function (event) {
+            var historyObj = JSON.stringify(argss.history) || null;
+
+            docEditor.refreshHistory(
+                {
+                    currentVersion: argss.file.version,
+                    history: historyObj
+                });
+        };
+
+        var onRequestHistoryData = function (data) {
+            var version = data.data;
+            var historyData = JSON.stringify(argss.historyData) || null;
+
+            docEditor.setHistoryData(historyData[version-1]);
+        };
+
+        var onRequestHistoryClose = function (event){
+            document.location.reload();
+        };
+
+        var onError = function (event) {
+            if (event)
+                innerAlert(event.data);
+        };
+
+        var onOutdatedVersion = function (event) {
+            location.reload(true);
+        };
+
+        var connectEditor = function () {
+
+            docEditor = new DocsAPI.DocEditor("iframeEditor", {
+
+"width": "100%",
+"height": "100%",
+"type": argss.editor.type,
+"documentType": argss.editor.documentType,
+"token": argss.editor.token,
+"document": {
+    "title": argss.file.name,
+    "url": argss.file.uri,
+    "fileType": argss.file.ext,
+    "key": argss.editor.key,
+    "info": {
+        "author": "Me",
+        "created": argss.file.created
+    },
+    "permissions": {
+        "comment": argss.editor.comment,
+        "download": true,
+        "edit": argss.editor.isEdit,
+        "modifyFilter": argss.editor.modifyFilter,
+        "review": argss.editor.review
+    }
+},
+"editorConfig": {
+    "mode": argss.editor.mode,
+    "lang": argss.editor.lang,
+    "callbackUrl": argss.editor.callbackUrl,
+    "user": {
+        "id": argss.editor.userid,
+        "name": argss.editor.name
+    },
+    "embedded": {
+        "saveUrl": argss.file.uri,
+        "embedUrl": argss.file.uri,
+        "shareUrl": argss.file.uri,
+        "toolbarDocked": "top"
+    },
+    "customization": {
+        "about": true,
+        "chat": true,
+        "comments": true,
+        "feedback": true,
+        "forcesave": false,
+        "goback": {
+            "url": argss.editor.backUrl
+        }
+    },
+    "fileChoiceUrl": argss.editor.fileChoiceUrl,
+    "plugins": argss.editor.plugins
+},
+
+                    events: {
+                        "onReady": onReady,
+                        "onDocumentStateChange": onDocumentStateChange,
+                        'onRequestEditRights': onRequestEditRights,
+                        "onError": onError,
+                        "onRequestHistory":  onRequestHistory,
+                        "onRequestHistoryData": onRequestHistoryData,
+                        "onRequestHistoryClose": onRequestHistoryClose,
+                        "onOutdatedVersion": onOutdatedVersion,
+                    }
+            });
+
+            fixSize();
+        };
+
+        var fixSize = function () {
+            var wrapEl = document.getElementsByClassName("form");
+            if (wrapEl.length) {
+                wrapEl[0].style.height = screen.availHeight + "px";
+                window.scrollTo(0, -1);
+                wrapEl[0].style.height = window.innerHeight + "px";
+            }
+        };
+
+        if (window.addEventListener) {
+            window.addEventListener("load", connectEditor);
+            window.addEventListener("resize", fixSize);
+        } else if (window.attachEvent) {
+            window.attachEvent("onload", connectEditor);
+            window.attachEvent("onresize", fixSize);
+        }
+
+    </script>
+</body>
+</html>
