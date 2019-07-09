@@ -5,7 +5,7 @@ var app = express();
 var indexRouter = require("./routers/index");
 
 app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://192.168.95.128, *");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header("Access-Control-Allow-Headers", "Content-Type");
