@@ -469,7 +469,9 @@
 				"format"        : this.documentFormat,
 				"url"           : this.documentUrl,
 				"title"         : this.documentTitle,
-				"nobase64"      : true
+				"nobase64"      : true,
+				"resHost"		: this.DocInfo.get_ResHost(),
+				"resUrl"		: this.DocInfo.get_ResUrl()
 			};
 			if (versionHistory)
 			{

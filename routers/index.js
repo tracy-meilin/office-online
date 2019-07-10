@@ -37,8 +37,9 @@ console.log(process.env['PATH'])
 ////////////////////////////////////////////
 
 // 获取主机的ip地址
-function hostIP(){
+function GetHostIP(){
     var interfaces = os.networkInterfaces;
+    var IPv4 = "127.0.0.1"
     if(process.platform == 'darwin'){
         for(var i = 0; i < interfaces.en0.length; i++) {
             if(interfaces.en0[i].family == 'IPv4') {
@@ -107,7 +108,7 @@ function requestDesktop(filename, req, res){
                 })
             },
             resData: {
-                host : req.query.host == undefined? hostIP:req.query.host,
+                host : req.query.host == undefined? GetHostIP():req.query.host,
                 url : req.query.resUrl == undefined?'':req.query.resUrl
             },
             history: {},
@@ -172,6 +173,10 @@ router.get("/", function (req, res) {
                     "pluginsData": []
                 })
             },
+            resData: {
+                host : "localhost",
+                url : "ppty/Edit.bin"
+            },
             history: {},
             historyData: {} 
         };
@@ -192,10 +197,6 @@ router.get("/", function (req, res) {
 router.get('/priview', function(req, res) {
     //res.render("index", {});
     res.redirect('/web-apps/apps/presentationeditor/main/index.html');
-});
-
-router.get('/editor', function(req, res){
-    
 });
 
 router.get('/editor', function(req, res){
@@ -258,5 +259,79 @@ router.get('/getRes', function(req, res){
         }
     });
 });
+
+router.get('/doc', function(req, res){
+    var url = req.query.url;
+    if(url == undefined)
+        return;
+
+    //获取url的md5值
+    var urlMd5 = md5(url);
+    var binFile = path.join(__dirname, "../public/ppty/" + urlMd5 + ".bin");
+    fs.stat(binFile, function(err, stat){
+        if(stat && stat.isFile()){
+            requestDoc("ppty/" + urlMd5 + ".bin", "", req, res);
+        }else{
+            var resUrl = "getRes?url=" + url;
+            requestDoc(resUrl, "", req, res);
+        }
+    });
+});
+
+function requestDoc(resUrl, filename, req, res){
+    try {
+        var mode = "edit";
+        var canEdit = req.query.canEdit == undefined ? true : req.query.canEdit;
+        var type = req.query.type == undefined ? 'desktop' : req.query.type;
+        var lang = 'en';
+        //var hostIP = GetHostIP();
+        var argss = {
+            apiUrl: "web-apps/apps/api/documents/api.js",
+            file: {
+                name: "test",
+                ext: req.ext == undefined ? "docx" : req.ext,
+                uri: "http://192.168.95.128:3000/files/__ffff_192.168.95.1/new%20(10).pptx",
+                //version: countVersion,
+                created: new Date().toDateString()
+            },
+            editor: {
+                type: type,
+                documentType: 'text',
+                key: "0",
+                token: "",
+                // callbackUrl: "http://192.168.95.128:3000/track?filename=new%20(7).pptx&useraddress=__ffff_192.168.95.1",
+                isEdit: canEdit && (mode == "edit" || mode == "filter"),
+                review: mode == "edit" || mode == "review",
+                comment: mode != "view" && mode != "embedded",
+                modifyFilter: mode != "filter",
+                mode: canEdit && mode != "view" ? "edit" : "view",
+                canBackToFolder:false,// type != "embedded",
+                // backUrl: "http://127.0.0.1:8081/back",
+                //curUserHostAddress: docManager.curUserHostAddress(),
+                lang: lang,
+                userid: "uid-1",
+                // name: "Jonn Smith",
+                // fileChoiceUrl: "http://127.0.0.1:8081/fileChoice",
+                plugins: JSON.stringify({
+                    "pluginsData": []
+                })
+            },
+            resData: {
+                host : req.query.host == undefined? "localhost:8080" :req.query.host,
+                url : resUrl
+            },
+            history: {},
+            historyData: {}
+        };
+
+        res.render("editor", argss);
+    } catch (ex) {
+        console.log(ex);
+        res.status(500);
+        res.render("error", {
+            message: "Server error"
+        });
+    }
+}
 
 module.exports = router;

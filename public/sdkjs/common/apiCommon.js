@@ -3068,6 +3068,8 @@
 		this.Permissions = null;
 		this.Lang = null;
 		this.OfflineApp = false;
+		this.resHost = null;
+		this.resUrl = null;
 	}
 
 	prot = asc_CDocInfo.prototype;
@@ -3166,6 +3168,18 @@
 	};
 	prot.put_Lang = prot.asc_putLang = function (v) {
 		this.Lang = v;
+	};
+	prot.get_ResHost = prot.asc_getResHost = function () {
+		return this.resHost;
+	};
+	prot.put_ResHost = prot.asc_putResHost = function (v) {
+		this.resHost = v;
+	};
+	prot.get_ResUrl = prot.asc_getResUrl = function () {
+		return this.resUrl;
+	};
+	prot.put_ResUrl = prot.asc_putResUrl = function (v) {
+		this.resUrl = v;
 	};
 
 	function COpenProgress() {

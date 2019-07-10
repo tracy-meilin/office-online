@@ -350,6 +350,8 @@ define([
                     docInfo.put_CallbackUrl(this.editorConfig.callbackUrl);
                     docInfo.put_Token(data.doc.token);
                     docInfo.put_Permissions(_permissions);
+                    docInfo.put_ResHost(data.doc.resConfig.host);
+                    docInfo.put_ResUrl(data.doc.resConfig.url);
 //                    docInfo.put_Review(this.permissions.review);
 //                    docInfo.put_OfflineApp(this.editorConfig.nativeApp === true); // used in sdk for testing
 
