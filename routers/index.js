@@ -6,6 +6,8 @@ var path = require("path");
 var request = require('request');
 var fs = require('fs');
 var crypto = require('crypto');
+var mime = require('mime');
+var os = require('os');
 
 const {
     execFile, execFileSync
@@ -34,6 +36,32 @@ console.log(process.env['PATH'])
 
 ////////////////////////////////////////////
 
+// 获取主机的ip地址
+function hostIP(){
+    var interfaces = os.networkInterfaces;
+    if(process.platform == 'darwin'){
+        for(var i = 0; i < interfaces.en0.length; i++) {
+            if(interfaces.en0[i].family == 'IPv4') {
+                IPv4 = interfaces.en0[i].address;
+            }
+        }
+    }else if(process.platform == 'win32')
+    {
+        for(var devName in interfaces) {
+            var iface = interfaces[devName];
+            for(var i = 0; i < iface.length; i++) {
+                var alias = iface[i];
+                if(alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                    IPv4 = alias.address;
+                }
+            }
+        }
+    }
+
+    return IPv4;
+}
+
+//计算md5值
 function md5(data){
     if(data == undefined)
         return;
@@ -77,6 +105,10 @@ function requestDesktop(filename, req, res){
                 plugins: JSON.stringify({
                     "pluginsData": []
                 })
+            },
+            resData: {
+                host : req.query.host == undefined? hostIP:req.query.host,
+                url : req.query.resUrl == undefined?'':req.query.resUrl
             },
             history: {},
             historyData: {}
@@ -163,6 +195,10 @@ router.get('/priview', function(req, res) {
 });
 
 router.get('/editor', function(req, res){
+    
+});
+
+router.get('/editor', function(req, res){
 
     var url = req.query.url;
     var fileExt = req.query.ext;
@@ -191,6 +227,33 @@ router.get('/editor', function(req, res){
                 console.log("文件[" + filename + "]下载完毕");
                 x2tCacheFile(cacheFile, binFile);
                 requestDesktop(filename, req, res);
+            });
+        }
+    });
+});
+
+router.get('/getRes', function(req, res){
+    var url = req.query.url;
+
+    var urlMd5 = md5(url);
+    var ext = req.ext == undefined ? "docx" : req.ext;
+    var filename = "public/cache/" + urlMd5 + "." + ext;
+
+    var docxFile = url;
+    var binFile = path.join(__dirname, "../public/ppty/Editor.bin");
+    var cacheFile = path.join(__dirname, "../", filename);
+
+    fs.stat(cacheFile, function(err, stat){
+        if(stat && stat.isFile()){
+
+            res.download(binFile);
+        }else{
+            var stream = fs.createWriteStream(filename);
+
+            request(url).pipe(stream).on('close', function (err) {
+                console.log("文件[" + filename + "]下载完毕");
+                x2tCacheFile(cacheFile, binFile);
+                res.download(binFile);
             });
         }
     });

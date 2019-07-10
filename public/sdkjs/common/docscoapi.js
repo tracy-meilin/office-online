@@ -1619,7 +1619,7 @@
           "type":"open",
           "status":"ok",
           "data":{
-             "Editor.bin":"../../../../ppty/Editor.bin",
+             "Editor.bin":"http://localhost:8080/getRes?&url=http://cs.101.com/v0.1/download/actions/direct?dentryId=5c0e5236-0791-420b-99ca-ce4d819fd6c6",
              "media/image1.png":"../../../../ppty/media/image1.png",
              "media/image10.png":"../../../../ppty/media/image10.png",
              "media/image11.png":"../../../../ppty/media/image11.png",
