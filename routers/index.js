@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const WebSocket = require('ws');
-const WebSocketServer = WebSocket.Server;
+//const WebSocket = require('ws');
+//const WebSocketServer = WebSocket.Server;
 var path = require("path");
 var request = require('request');
 var fs = require('fs');
 var crypto = require('crypto');
-var fs = require("fs");
 
 const {
     execFile, execFileSync
@@ -15,23 +14,23 @@ const {
 console.log(process.env['PATH'])
 
 //ws 连接
-const wss = new WebSocketServer({
-    port : 3000
-});
+// const wss = new WebSocketServer({
+//     port : 3000
+// });
 
-wss.on('connection', function(ws){
-    console.log('[SERVER] connection()');
-    ws.on('message', function(message){
-        console.log('[SERVER] Received: ${message}');
-        ws.send(`What's your name?`, (err) => {
-            if (err) {
-                console.log(`[SERVER] error: ${err}`);
-            }
-        });
-    });
-});
+// wss.on('connection', function(ws){
+//     console.log('[SERVER] connection()');
+//     ws.on('message', function(message){
+//         console.log('[SERVER] Received: ${message}');
+//         ws.send(`What's your name?`, (err) => {
+//             if (err) {
+//                 console.log(`[SERVER] error: ${err}`);
+//             }
+//         });
+//     });
+// });
 
-console.log('ws server started at port 3000...');
+// console.log('ws server started at port 3000...');
 
 ////////////////////////////////////////////
 
@@ -45,7 +44,7 @@ function md5(data){
 function requestDesktop(filename, req, res){
     try {
         var mode = "edit";
-        var canEdit = req.query.canEdit == undefined ? true : req.query.type;
+        var canEdit = req.query.canEdit == undefined ? true : req.query.canEdit;
         var type = req.query.type == undefined ? 'desktop' : req.query.type;
         var lang = 'en';
         var argss = {
@@ -62,19 +61,19 @@ function requestDesktop(filename, req, res){
                 documentType: 'text',
                 key: "0",
                 token: "",
-                callbackUrl: "http://192.168.95.128:3000/track?filename=new%20(7).pptx&useraddress=__ffff_192.168.95.1",
+                // callbackUrl: "http://192.168.95.128:3000/track?filename=new%20(7).pptx&useraddress=__ffff_192.168.95.1",
                 isEdit: canEdit && (mode == "edit" || mode == "filter"),
                 review: mode == "edit" || mode == "review",
                 comment: mode != "view" && mode != "embedded",
                 modifyFilter: mode != "filter",
                 mode: canEdit && mode != "view" ? "edit" : "view",
-                canBackToFolder: type != "embedded",
-                backUrl: "http://127.0.0.1:8081/back",
+                canBackToFolder:false,// type != "embedded",
+                // backUrl: "http://127.0.0.1:8081/back",
                 //curUserHostAddress: docManager.curUserHostAddress(),
                 lang: lang,
                 userid: "uid-1",
-                name: "Jonn Smith",
-                fileChoiceUrl: "http://127.0.0.1:8081/fileChoice",
+                // name: "Jonn Smith",
+                // fileChoiceUrl: "http://127.0.0.1:8081/fileChoice",
                 plugins: JSON.stringify({
                     "pluginsData": []
                 })
@@ -196,43 +195,5 @@ router.get('/editor', function(req, res){
         }
     });
 });
-
-router.get('/a', function(req, res, next){
-    var url = req.url;
-    res.redirect('/web-apps/apps/presentationeditor/main/index.html');
-    //next();
-});
-
-// router.use(function(req, res, next){
-//     console.log(404);
-//     var url = req.query.url;
-//     var fileExt = req.query.ext;
-
-//     console.log(url);
-
-//     //获取url的md5值
-//     var urlMd5 = md5(url);
-//     var ext = req.ext == undefined ? "docx" : req.ext;
-//     var filename = "public/cache/" + urlMd5 + "." + ext;
-
-//     var docxFile = url;
-//     var binFile = path.join(__dirname, "../public/ppty/Editor.bin");
-//     var cacheFile = path.join(__dirname, "../", filename);
-
-//     fs.stat(cacheFile, function (err, stat) {
-//         if (stat && stat.isFile()) {
-//             x2tCacheFile(cacheFile, binFile);
-//             requestDesktop(filename, req, res);
-//         } else {
-//             var stream = fs.createWriteStream(filename);
-
-//             request(url).pipe(stream).on('close', function (err) {
-//                 console.log("文件[" + filename + "]下载完毕");
-//                 x2tCacheFile(cacheFile, binFile);
-//                 requestDesktop(filename, req, res);
-//             });
-//         }
-//     });
-// });
 
 module.exports = router;

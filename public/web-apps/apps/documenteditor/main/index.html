@@ -277,21 +277,61 @@
 
     <script type="text/javascript" src="../sdk_dev_scripts.js"></script>
     <script>
-        window.sdk_dev_scrpipts.forEach(function(item){
-            document.write('<script type="text/javascript" src="' + item + '"><\/script>');
-        });
+        // $.ajax({
+        //     url : "/a",
+        //     type:'Get',
+        //     success:function(){ // http code 200
+        //         console.log('/a success');
+        //     }
+        // });
+        // var ajax = new XMLHttpRequest();
+        // ajax.onreadystatechange = function(){
+        //     console.log(ajax.readyState);
 
-        window.requireTimeourError = function(){
-            var reqerr;
+        //     window.sdk_dev_scrpipts.forEach(function(item){
+        //          document.write('<script type="text/javascript" src="' + item + '"><\/script>');
+        //      });
 
-            if ( lang == 'de')      reqerr = 'Die Verbindung ist zu langsam, einige Komponenten konnten nicht geladen werden. Aktualisieren Sie bitte die Seite.';
-            else if ( lang == 'es') reqerr = 'La conexión es muy lenta, algunos de los componentes no han podido cargar. Por favor recargue la página.';
-            else if ( lang == 'fr') reqerr = 'La connexion est trop lente, certains des composants n\'ons pas pu être chargé. Veuillez recharger la page.';
-            else if ( lang == 'ru') reqerr = 'Слишком медленное соединение, не удается загрузить некоторые компоненты. Пожалуйста, обновите страницу.';
-            else reqerr = 'The connection is too slow, some of the components could not be loaded. Please reload the page.';
+        //      document.write('<script data-main="app_dev" src="../../../vendor/requirejs/require.js"><\/script>');
+        // }
 
-            return reqerr;
-        };
+        // ajax.open('get', '/');
+        // ajax.send();
+
+        //  let ws = new WebSocket('ws://localhost:3000');
+
+        // ws.onopen = function (e) {
+        //     ws.send('Connection to server opened');
+        // }
+
+        // ws.onmessage = function(event) { 
+        //     console.log('Client received a message', event); 
+
+        //     $('#loading-mask').hide().remove();
+        //     //window.location.href="http://localhost:8082";
+
+        //     // window.sdk_dev_scrpipts.forEach(function(item){
+        //     //     document.write('<script type="text/javascript" src="' + item + '"><\/script>');
+        //     // });
+
+        //     // document.write('<script data-main="app_dev" src="../../../vendor/requirejs/require.js"><\/script>');
+        // }; 
+
+         window.sdk_dev_scrpipts.forEach(function(item){
+             document.write('<script type="text/javascript" src="' + item + '"><\/script>');
+         });
+
+        // window.requireTimeourError = function(){
+        //     var reqerr;
+
+        //     if ( lang == 'de')      reqerr = 'Die Verbindung ist zu langsam, einige Komponenten konnten nicht geladen werden. Aktualisieren Sie bitte die Seite.';
+        //     else if ( lang == 'es') reqerr = 'La conexión es muy lenta, algunos de los componentes no han podido cargar. Por favor recargue la página.';
+        //     else if ( lang == 'fr') reqerr = 'La connexion est trop lente, certains des composants n\'ons pas pu être chargé. Veuillez recharger la page.';
+        //     else if ( lang == 'ru') reqerr = 'Слишком медленное соединение, не удается загрузить некоторые компоненты. Пожалуйста, обновите страницу.';
+        //     else reqerr = 'The connection is too slow, some of the components could not be loaded. Please reload the page.';
+
+        //     return reqerr;
+        // };
     </script>
     <!-- application -->
     <script data-main="app_dev" src="../../../vendor/requirejs/require.js"></script>
