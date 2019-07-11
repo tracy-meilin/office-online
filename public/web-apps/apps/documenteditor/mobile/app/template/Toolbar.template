@@ -11,9 +11,6 @@
             </a>
             <% } %>
         </div>
-        <% if (!phone) { %>
-        <div class="center" id="toolbar-title"></div>
-        <% } %>
         <div class="right">
             <% if (android) { %>
             <a href="#" id="toolbar-undo" class="link icon-only disabled" style="display: none;">

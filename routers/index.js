@@ -190,10 +190,6 @@ router.get("/", function (req, res) {
     }
 });
 
-// router.get('/editor', function(req, res) {
-//     res.redirect('/web-apps/apps/api/documents/index.html');
-// });
-
 router.get('/priview', function(req, res) {
     //res.render("index", {});
     res.redirect('/web-apps/apps/presentationeditor/main/index.html');
@@ -240,23 +236,28 @@ router.get('/getRes', function(req, res){
     var ext = req.ext == undefined ? "docx" : req.ext;
     var filename = "public/cache/" + urlMd5 + "." + ext;
 
-    var docxFile = url;
-    var binFile = path.join(__dirname, "../public/ppty/Editor.bin");
-    var cacheFile = path.join(__dirname, "../", filename);
+    var pptyDir = path.join(__dirname, "../public/ppty/" + urlMd5);
+    fs.stat(pptyDir, function(err, stat){
+        if(stat == null || stat.isDirectory() == false){
+            fs.mkdirSync(pptyDir);
+        }   
 
-    fs.stat(cacheFile, function(err, stat){
-        if(stat && stat.isFile()){
+        var binFile = pptyDir + "/Editor.bin";
+        var cacheFile = path.join(__dirname, "../", filename);
 
-            res.download(binFile);
-        }else{
-            var stream = fs.createWriteStream(filename);
-
-            request(url).pipe(stream).on('close', function (err) {
-                console.log("文件[" + filename + "]下载完毕");
-                x2tCacheFile(cacheFile, binFile);
+        fs.stat(binFile, function(err, stat){
+            if(stat && stat.isFile()){
                 res.download(binFile);
-            });
-        }
+            }else{
+                var stream = fs.createWriteStream(filename);
+
+                request(url).pipe(stream).on('close', function (err) {
+                    console.log("文件[" + filename + "]下载完毕");
+                    x2tCacheFile(cacheFile, binFile);
+                    res.download(binFile);
+                });
+            }
+        });
     });
 });
 
@@ -267,20 +268,27 @@ router.get('/doc', function(req, res){
 
     //获取url的md5值
     var urlMd5 = md5(url);
-    var binFile = path.join(__dirname, "../public/ppty/" + urlMd5 + ".bin");
-    fs.stat(binFile, function(err, stat){
-        if(stat && stat.isFile()){
-            requestDoc("ppty/" + urlMd5 + ".bin", "", req, res);
-        }else{
-            var resUrl = "getRes?url=" + url;
-            requestDoc(resUrl, "", req, res);
-        }
+    var pptyDir = path.join(__dirname, "../public/ppty/" + urlMd5);
+    fs.stat(pptyDir, function(err, stat){
+        if(stat == null || stat.isDirectory() == false){
+            fs.mkdirSync(pptyDir);
+        }    
+
+        var binFile = pptyDir + "/Editor.bin";
+        fs.stat(binFile, function(err, stat){
+            if(stat && stat.isFile()){
+                requestDoc("ppty/" + urlMd5 + "/Editor.bin", "", req, res);
+            }else{
+                var resUrl = "getRes?url=" + url;
+                requestDoc(resUrl, "", req, res);
+            }
+        });
     });
 });
 
 function requestDoc(resUrl, filename, req, res){
     try {
-        var mode = "edit";
+        var mode = req.query.mode == undefined? "edit" : req.query.mode;
         var canEdit = req.query.canEdit == undefined ? true : req.query.canEdit;
         var type = req.query.type == undefined ? 'desktop' : req.query.type;
         var lang = 'en';
@@ -288,7 +296,7 @@ function requestDoc(resUrl, filename, req, res){
         var argss = {
             apiUrl: "web-apps/apps/api/documents/api.js",
             file: {
-                name: "test",
+                name: "",
                 ext: req.ext == undefined ? "docx" : req.ext,
                 uri: "http://192.168.95.128:3000/files/__ffff_192.168.95.1/new%20(10).pptx",
                 //version: countVersion,

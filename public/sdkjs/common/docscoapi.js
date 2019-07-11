@@ -948,13 +948,15 @@
 
   DocsCoApi.prototype.sendCursor = function(cursor) {
     if (typeof cursor === 'string') {
-      this._send({"type": "cursor", "cursor": cursor});
+      //this._send({"type": "cursor", "cursor": cursor});
+      this._onServerMessage('{"type": "cursor", "cursor": "' + cursor + '"}');
     }
   };
 
   DocsCoApi.prototype.sendChangesError = function(data) {
     if (typeof data === 'string') {
-      this._send({'type': 'changesError', 'stack': data});
+      //this._send({'type': 'changesError', 'stack': data});
+      this._onSaveChanges('{"type": "changesError", "stack": "' + data + '"}');
     }
   };
 
