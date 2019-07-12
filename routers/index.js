@@ -8,12 +8,39 @@ var fs = require('fs');
 var crypto = require('crypto');
 var mime = require('mime');
 var os = require('os');
+var reqUrl = require('url');
 
 const {
     execFile, execFileSync
 } = require('child_process');
 
 console.log(process.env['PATH'])
+
+// var stream = fs.createWriteStream("test.docx");
+// var url = "http://cs.101.com/v0.1/static/ppt101_res/test/20171225--101%E6%95%99%E8%82%B2PPT%E3%80%90PC%E7%AB%AF%EF%BC%88V2.1.0.12%E7%89%88)%E3%80%91%26%E3%80%90%E6%89%8B%E6%9C%BA%E7%AB%AF%EF%BC%88V1.6.5%E7%89%88%EF%BC%89%E3%80%91%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6.docx";
+
+// var req = request(url);
+// var writeStream = req.pipe(stream);
+// var fileSize = 0;
+// var downloadedSize = 0;
+
+// writeStream.on("close", function(err){
+//     console.log("文件下载完毕");
+// });
+
+// req.on("response", function(data){
+//     fileSize = data.headers['content-length'];
+//     console.log("fileSize" + fileSize);
+// });
+
+// req.on("data", function(chunk){
+//     downloadedSize = downloadedSize + chunk.length;
+//     console.log("fileSize:" + fileSize + " file downloaded size :" + downloadedSize); 
+// });
+
+// req.on('end', function() { 
+//     console.log("文件 end");
+// });
 
 //ws 连接
 // const wss = new WebSocketServer({
@@ -250,7 +277,8 @@ router.get('/getRes', function(req, res){
                 res.download(binFile);
             }else{
                 var stream = fs.createWriteStream(filename);
-
+                url = encodeURI(url);
+                
                 request(url).pipe(stream).on('close', function (err) {
                     console.log("文件[" + filename + "]下载完毕");
                     x2tCacheFile(cacheFile, binFile);
@@ -279,6 +307,7 @@ router.get('/doc', function(req, res){
             if(stat && stat.isFile()){
                 requestDoc("ppty/" + urlMd5 + "/Editor.bin", "", req, res);
             }else{
+                url = encodeURIComponent(url);
                 var resUrl = "getRes?url=" + url;
                 requestDoc(resUrl, "", req, res);
             }
