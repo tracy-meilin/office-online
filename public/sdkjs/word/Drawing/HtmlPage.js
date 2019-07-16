@@ -863,6 +863,8 @@ function CEditorPage(api)
 				};
 			}
 		}
+
+		this.EnableReaderMode();
 	};
 
 	this.onButtonRulersClick       = function()

@@ -1086,7 +1086,7 @@ html.android .page-from-center-to-right:before {
   top: 0;
   width: 100%;
   height: 100%;
-  padding: 0 8px;
+  padding: 0 0px;
   box-sizing: border-box;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1127,7 +1127,7 @@ html.ios-gt-8 .toolbar b {
 .navbar,
 .toolbar,
 .subnavbar {
-  background: #f7f7f8;
+  background: #446995;
 }
 .navbar a.link,
 .toolbar a.link,

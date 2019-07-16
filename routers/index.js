@@ -14,7 +14,8 @@ const {
     execFile, execFileSync
 } = require('child_process');
 
-console.log(process.env['PATH'])
+process.env.LD_LIBRARY_PATH = path.join(__dirname, "../converter");
+console.log(process.env.LD_LIBRARY_PATH);
 
 // var stream = fs.createWriteStream("test.docx");
 // var url = "http://cs.101.com/v0.1/static/ppt101_res/test/20171225--101%E6%95%99%E8%82%B2PPT%E3%80%90PC%E7%AB%AF%EF%BC%88V2.1.0.12%E7%89%88)%E3%80%91%26%E3%80%90%E6%89%8B%E6%9C%BA%E7%AB%AF%EF%BC%88V1.6.5%E7%89%88%EF%BC%89%E3%80%91%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6.docx";
@@ -305,17 +306,17 @@ router.get('/doc', function(req, res){
         var binFile = pptyDir + "/Editor.bin";
         fs.stat(binFile, function(err, stat){
             if(stat && stat.isFile()){
-                requestDoc("ppty/" + urlMd5 + "/Editor.bin", "", req, res);
+                requestDoc("ppty/" + urlMd5 + "/Editor.bin", "", req, res, url);
             }else{
                 url = encodeURIComponent(url);
                 var resUrl = "getRes?url=" + url;
-                requestDoc(resUrl, "", req, res);
+                requestDoc(resUrl, "", req, res, url);
             }
         });
     });
 });
 
-function requestDoc(resUrl, filename, req, res){
+function requestDoc(resUrl, filename, req, res, url101=""){
     try {
         var mode = req.query.mode == undefined? "edit" : req.query.mode;
         var canEdit = req.query.canEdit == undefined ? true : req.query.canEdit;
@@ -355,7 +356,8 @@ function requestDoc(resUrl, filename, req, res){
             },
             resData: {
                 host : req.query.host == undefined? "localhost:8080" :req.query.host,
-                url : resUrl
+                url : resUrl,
+                url101 : url101
             },
             history: {},
             historyData: {}

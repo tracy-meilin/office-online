@@ -44,10 +44,10 @@ var reqerr;
 require.config({
     baseUrl: '../../',
     paths: {
-        jquery          : '../vendor/jquery/jquery',
+        jquery          : '../vendor/jquery/jquery.min',
         underscore      : '../vendor/underscore/underscore',
         backbone        : '../vendor/backbone/backbone',
-        framework7      : '../vendor/framework7/js/framework7',
+        framework7      : '../vendor/framework7/js/framework7.min',
         text            : '../vendor/requirejs-text/text',
         xregexp         : '../vendor/xregexp/xregexp-all-min',
         sockjs          : '../vendor/sockjs/sockjs.min',

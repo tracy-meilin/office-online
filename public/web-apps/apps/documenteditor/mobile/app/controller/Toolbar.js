@@ -98,6 +98,11 @@ define([
                 $('#toolbar-title').html(title);
             },
 
+            setDownloadUrl: function(url){
+                $('#toolbar-down').attr("onclick","javascript:location.href='"+url+"'"); 
+            },
+
+
             // Handlers
 
             onBack: function (e) {

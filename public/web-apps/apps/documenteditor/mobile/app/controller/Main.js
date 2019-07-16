@@ -249,6 +249,7 @@ define([
 
                 if (data.doc) {
                     DE.getController('Toolbar').setDocumentTitle(data.doc.title);
+                    DE.getController('Toolbar').setDownloadUrl(data.doc.resConfig.url101);
                 }
             },
 
