@@ -1614,6 +1614,7 @@
     else {
       var host = opt_openCmd.resHost;
       var url = opt_openCmd.resUrl;
+      var urlMd5 = opt_openCmd.resUrlMd5;
       var EditBin = "http://" + host + "/" + url;
       this._onServerMessage('{"type":"authChanges","changes":[]}');
       this._onServerMessage('{"type":"auth","result":1,"sessionId":"b8965716-013a-4fee-b988-a33fbc35e445","sessionTimeConnect":1531917603202,"participants":[{"id":"uid-15","idOriginal":"uid-1","username":"Jonn Smith","indexUser":5,"view":false,"connectionId":"b8965716-013a-4fee-b988-a33fbc35e445","isCloseCoAuthoring":false}],"locks":[],"indexUser":5,"g_cAscSpellCheckUrl":"/spellchecker","buildVersion":"5.1.4","buildNumber":22,"licenseType":7,"settings":{"spellcheckerUrl":"/spellchecker","reconnection":{"attempts":50,"delay":2000}}}');
@@ -1624,19 +1625,8 @@
           "type":"open",
           "status":"ok",
           "data":{
-             "Editor.bin": EditBin,//"http://localhost:8080/getRes?&url=http://cs.101.com/v0.1/download/actions/direct?dentryId=5c0e5236-0791-420b-99ca-ce4d819fd6c6",
-             "media/image1.png":"../../../../ppty/media/image1.png",
-             "media/image10.png":"../../../../ppty/media/image10.png",
-             "media/image11.png":"../../../../ppty/media/image11.png",
-             "media/image12.png":"../../../../ppty/media/image12.png",
-             "media/image2.png":"../../../../ppty/media/image2.png",
-             "media/image3.png":"../../../../ppty/media/image3.png",
-             "media/image4.png":"../../../../ppty/media/image4.png",
-             "media/image5.png":"../../../../ppty/media/image5.png",
-             "media/image6.png":"../../../../ppty/media/image6.png",
-             "media/image7.png":"../../../../ppty/media/image7.png",
-             "media/image8.png":"../../../../ppty/media/image8.png",
-             "media/image9.png":"../../../../ppty/media/image9.png"
+             "Editor.bin": EditBin,
+             "media" : "../../../../ppty/" + urlMd5+ "/"
             }
           }
         }));

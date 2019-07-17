@@ -262,7 +262,7 @@ router.get('/getRes', function(req, res){
 
     var urlMd5 = md5(url);
     var ext = req.ext == undefined ? "docx" : req.ext;
-    var filename = "public/cache/" + urlMd5 + "." + ext;
+    var cacheFile = path.join(__dirname, "../public/cache/" + urlMd5 + "." + ext);
 
     var pptyDir = path.join(__dirname, "../public/ppty/" + urlMd5);
     fs.stat(pptyDir, function(err, stat){
@@ -271,20 +271,30 @@ router.get('/getRes', function(req, res){
         }   
 
         var binFile = pptyDir + "/Editor.bin";
-        var cacheFile = path.join(__dirname, "../", filename);
 
         fs.stat(binFile, function(err, stat){
             if(stat && stat.isFile()){
                 res.download(binFile);
             }else{
-                var stream = fs.createWriteStream(filename);
-                url = encodeURI(url);
-                
-                request(url).pipe(stream).on('close', function (err) {
-                    console.log("文件[" + filename + "]下载完毕");
-                    x2tCacheFile(cacheFile, binFile);
-                    res.download(binFile);
-                });
+                console.log("brefore createWriteStream");
+
+                try{
+                    var stream = fs.createWriteStream(cacheFile);
+                    url = encodeURI(url);
+
+                    var reqWrite = request(url).pipe(stream);
+
+                    reqWrite.on('error', error => {
+                        res.status(502).send(error.message);
+                    });
+                     
+                    reqWrite.on('close', function (err) {
+                        console.log("cache file: [" + cacheFile + "] downloaded");
+                        x2tCacheFile(cacheFile, binFile);
+                        res.download(binFile);
+                    });
+                }
+                catch(e){};
             }
         });
     });
@@ -292,6 +302,7 @@ router.get('/getRes', function(req, res){
 
 router.get('/doc', function(req, res){
     var url = req.query.url;
+    var url101 = req.query.url;
     if(url == undefined)
         return;
 
@@ -303,20 +314,13 @@ router.get('/doc', function(req, res){
             fs.mkdirSync(pptyDir);
         }    
 
-        var binFile = pptyDir + "/Editor.bin";
-        fs.stat(binFile, function(err, stat){
-            if(stat && stat.isFile()){
-                requestDoc("ppty/" + urlMd5 + "/Editor.bin", "", req, res, url);
-            }else{
-                url = encodeURIComponent(url);
-                var resUrl = "getRes?url=" + url;
-                requestDoc(resUrl, "", req, res, url);
-            }
-        });
+        url = encodeURIComponent(url);
+        var resUrl = "getRes?url=" + url;
+        requestDoc(resUrl, "", req, res, url101, urlMd5);
     });
 });
 
-function requestDoc(resUrl, filename, req, res, url101=""){
+function requestDoc(resUrl, filename, req, res, url101="", urlMd5){
     try {
         var mode = req.query.mode == undefined? "edit" : req.query.mode;
         var canEdit = req.query.canEdit == undefined ? true : req.query.canEdit;
@@ -357,7 +361,8 @@ function requestDoc(resUrl, filename, req, res, url101=""){
             resData: {
                 host : req.query.host == undefined? "localhost:8080" :req.query.host,
                 url : resUrl,
-                url101 : url101
+                url101 : url101,
+                urlMd5 : urlMd5
             },
             history: {},
             historyData: {}

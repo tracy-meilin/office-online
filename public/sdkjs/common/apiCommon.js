@@ -3070,6 +3070,7 @@
 		this.OfflineApp = false;
 		this.resHost = null;
 		this.resUrl = null;
+		this.resUrlMd5 = null;
 	}
 
 	prot = asc_CDocInfo.prototype;
@@ -3180,6 +3181,12 @@
 	};
 	prot.put_ResUrl = prot.asc_putResUrl = function (v) {
 		this.resUrl = v;
+	};
+	prot.get_ResUrlMd5 = prot.asc_getResUrlMd5 = function () {
+		return this.resUrlMd5;
+	};
+	prot.put_ResUrlMd5 = prot.asc_putResUrlMd5 = function (v) {
+		this.resUrlMd5 = v;
 	};
 
 	function COpenProgress() {

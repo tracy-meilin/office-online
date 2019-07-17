@@ -471,7 +471,8 @@
 				"title"         : this.documentTitle,
 				"nobase64"      : true,
 				"resHost"		: this.DocInfo.get_ResHost(),
-				"resUrl"		: this.DocInfo.get_ResUrl()
+				"resUrl"		: this.DocInfo.get_ResUrl(),
+				"resUrlMd5"		: this.DocInfo.get_ResUrlMd5()
 			};
 			if (versionHistory)
 			{

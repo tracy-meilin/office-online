@@ -347,7 +347,8 @@
 						 {
 							 if (this.urls)
 							 {
-								 return this.urls[strPath];
+								 return this.urls['media'] + strPath;
+								 //return this.urls[strPath];
 							 }
 							 return null;
 						 },

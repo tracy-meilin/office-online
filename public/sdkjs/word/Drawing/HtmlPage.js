@@ -864,7 +864,7 @@ function CEditorPage(api)
 			}
 		}
 
-		this.EnableReaderMode();
+		//this.EnableReaderMode();
 	};
 
 	this.onButtonRulersClick       = function()

@@ -352,6 +352,7 @@ define([
                     docInfo.put_Permissions(_permissions);
                     docInfo.put_ResHost(data.doc.resConfig.host);
                     docInfo.put_ResUrl(data.doc.resConfig.url);
+                    docInfo.put_ResUrlMd5(data.doc.resConfig.urlMd5);
 //                    docInfo.put_Review(this.permissions.review);
 //                    docInfo.put_OfflineApp(this.editorConfig.nativeApp === true); // used in sdk for testing
 
