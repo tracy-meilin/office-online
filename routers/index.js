@@ -261,7 +261,7 @@ router.get('/getRes', function(req, res){
     var url = req.query.url;
 
     var urlMd5 = md5(url);
-    var ext = req.ext == undefined ? "docx" : req.ext;
+    var ext = req.query.ext == undefined ? "docx" : req.query.ext;
     var cacheFile = path.join(__dirname, "../public/cache/" + urlMd5 + "." + ext);
 
     var pptyDir = path.join(__dirname, "../public/ppty/" + urlMd5);
@@ -316,6 +316,10 @@ router.get('/doc', function(req, res){
 
         url = encodeURIComponent(url);
         var resUrl = "getRes?url=" + url;
+        if(req.query.ext != undefined)
+        {
+            resUrl = resUrl + "&ext=" + req.query.ext;
+        }
         requestDoc(resUrl, "", req, res, url101, urlMd5);
     });
 });
@@ -331,14 +335,14 @@ function requestDoc(resUrl, filename, req, res, url101="", urlMd5){
             apiUrl: "web-apps/apps/api/documents/api.js",
             file: {
                 name: "",
-                ext: req.ext == undefined ? "docx" : req.ext,
+                ext: req.query.ext == undefined ? "docx" : req.query.ext,
                 uri: "http://192.168.95.128:3000/files/__ffff_192.168.95.1/new%20(10).pptx",
                 //version: countVersion,
                 created: new Date().toDateString()
             },
             editor: {
                 type: type,
-                documentType: 'text',
+                documentType: req.query.ducumentType == undefined ? 'text' : req.query.ducumentType,
                 key: "0",
                 token: "",
                 // callbackUrl: "http://192.168.95.128:3000/track?filename=new%20(7).pptx&useraddress=__ffff_192.168.95.1",

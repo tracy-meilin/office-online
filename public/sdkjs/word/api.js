@@ -769,7 +769,7 @@
 		this.isSpellCheckEnable = true;
 
 		// это чтобы сразу показать ридер, без возможности вернуться в редактор/вьюер
-		this.isOnlyReaderMode = true;
+		this.isOnlyReaderMode = false;
 
 		/**************************************/
 

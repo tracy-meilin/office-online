@@ -233,6 +233,9 @@ define([
                     docInfo.put_CallbackUrl(this.editorConfig.callbackUrl);
                     docInfo.put_Token(data.doc.token);
                     docInfo.put_Permissions(_permissions);
+                    docInfo.put_ResHost(data.doc.resConfig.host);
+                    docInfo.put_ResUrl(data.doc.resConfig.url);
+                    docInfo.put_ResUrlMd5(data.doc.resConfig.urlMd5);
                 }
 
                 this.api.asc_registerCallback('asc_onGetEditorPermissions', _.bind(this.onEditorPermissions, this));
